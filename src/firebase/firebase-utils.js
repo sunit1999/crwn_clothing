@@ -40,6 +40,39 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     return userRef;
 }
 
+// used to add data to firestore db (one time use)
+export const addCollectionAndDocuments = async (collectionKey, objectToAdd) => {
+    const collectionRef = firestore.collection(collectionKey);
+
+    const batch = firestore.batch();
+    objectToAdd.forEach(obj => {
+        const newDocRef = collectionRef.doc();
+        batch.set(newDocRef, obj);
+    });
+
+    return await batch.commit();
+}
+
+export const convertCollectionSnapShotToMap = collections => {
+
+    const transformedCollections = collections.docs.map(docSnapShot => {
+        const { items, title } = docSnapShot.data();
+
+        return {
+            routeName: encodeURI(title.toLowerCase()),
+            id: docSnapShot.id,
+            items,
+            title
+        }
+
+    });
+
+    return transformedCollections.reduce((accumulator, collection) => {
+        accumulator[collection.title.toLowerCase()] = collection
+        return accumulator;
+    },{})
+}
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
