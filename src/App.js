@@ -11,34 +11,15 @@ import ShopPage from './pages/shoppage/shoppage-component';
 import SignInAndUpPage from './pages/sign-in-up-page/sign-in-page-component';
 import CheckoutPage from './pages/checkoutpage/checkout-component';
 
-import { auth, createUserProfileDocument } from './firebase/firebase-utils';
-
-import setCurrentUser from './redux/user/user-actions';
 import { selectCurrentUser } from './redux/user/user-selectors';
+import { checkUserSession } from './redux/user/user-actions';
 
 class App extends Component {
   unsubscribeFromAuth = null;
   
   componentDidMount() {
-    const { updateUserState } = this.props;
-    // console.log(setCurrentUser);
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-      // if user signed out, set the state to null
-      if (!userAuth) updateUserState(userAuth);
-      else {
-        // if user logged in, store his data in databse and get its refrence in the docuemnt
-        const userRef = await createUserProfileDocument(userAuth);
-        // then using this reference, set the state of our class
-        userRef.onSnapshot(snapshot => {
-          updateUserState({
-              id: snapshot.id,
-              ...snapshot.data()
-          });
-        });
-
-        setCurrentUser(userAuth);
-      }
-    });
+    const { checkUserSession } = this.props;
+    checkUserSession();
   }
 
   componentWillUnmount() {
@@ -71,11 +52,9 @@ const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
 });
 
-// dispath() helps in setting new user state.
-// everytime user state changes, updateUserState is passed to App as props
 const mapDispatchToProps = dispatch => ({
-  updateUserState : user => dispatch(setCurrentUser(user))
-});
+  checkUserSession: () => dispatch(checkUserSession())
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
 

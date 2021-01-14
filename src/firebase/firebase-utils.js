@@ -73,14 +73,24 @@ export const convertCollectionSnapShotToMap = collections => {
     },{})
 }
 
+// used for check wheather user is still logged in 
+export const getCurrentUser = () => {
+    return new Promise((resolve, reject) => {
+        const unsubscribeId = auth.onAuthStateChanged(userAuth => {
+            unsubscribeId();
+            resolve(userAuth);
+        }, reject);
+    })
+}
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
-const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({ prompt: 'select_account' });
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-export const signInWithGoogle = () => auth.signInWithPopup(provider);
+export const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
 
 export default firebase;

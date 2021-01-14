@@ -9,7 +9,7 @@ const selectCollections = createSelector(
 
 export const selectCollectionsForPreview = createSelector(
     [selectCollections],
-    collections => collections? Object.keys(collections).map(key => collections[key]) : []
+    collections => collections ? Object.keys(collections).map(key => collections[key]) : []
 );
 
 // takes url param and finds the collection id and 
@@ -19,4 +19,14 @@ export const selectCollection = collectionUrlParam => {
         [selectCollections],
         collections => collections ? collections[collectionUrlParam] : null
     )
-}
+};
+
+export const selectIsCollectionFetching = createSelector(
+    [selectShop],
+    shop => shop.isFetching
+);
+
+export const selectIsCollectionLoaded = createSelector(
+    [selectShop],
+    shop => !!shop.collections
+);
