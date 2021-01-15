@@ -53,6 +53,7 @@ export const addCollectionAndDocuments = async (collectionKey, objectToAdd) => {
     return await batch.commit();
 }
 
+// converts data stored in firestore to objects and adds routeName
 export const convertCollectionSnapShotToMap = collections => {
 
     const transformedCollections = collections.docs.map(docSnapShot => {
