@@ -21,7 +21,12 @@
     top: 255px;
     display: none;
 
-    
+    @media screen and (max-width: 800px){
+      display: block;
+      min-width: unset;
+      opacity: 0.9;
+      padding: 0px 10px;
+    }
   }
 
   &:hover {
@@ -32,6 +37,19 @@
         opacity: 0.85;
         display: flex;
       }
+  }
+
+  @media screen and (max-width: 800px){
+    width: 40vw;
+
+    &:hover {
+      .image {
+        opacity: unset;
+      }
+      .custom-button {
+        opacity: unset
+      }
+    }
   }
 
   .collection-footer {
